@@ -188,3 +188,18 @@ footer {
     margin-bottom: 8px;
     letter-spacing: 4px;
 }
+
+/* Auth-Container oben im Header fixieren */
+.auth-container {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+/* Wichtig: Versteckt Elemente sauber */
+.hidden {
+    display: none !important;
+}
