@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Orbis Arcade</title>
-    <!-- Retro-Pixel-Schriftart von Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -12,18 +11,23 @@
 </head>
 <body>
 
-    <!-- Retro CRT-Monitor Effect Overlay -->
-    <div class="crt-overlay"></div>
-
     <header class="hero">
+        <!-- Login & Spieler-Info oben rechts -->
+        <div class="auth-container">
+            <button id="login-btn" class="auth-btn">MIT GOOGLE ANMELDEN</button>
+            <div id="user-info" class="user-info hidden">
+                <span id="user-name">PLAYER: GUEST</span>
+                <button id="logout-btn" class="logout-btn">LOGOUT</button>
+            </div>
+        </div>
+
         <h1 class="arcade-title">ORBIS ARCADE</h1>
         <p class="welcome-text">
-            Willkommen in der Orbis Arcade. Entdecke kleine Minispiele und lerne etwas über die Welt.
+            Willkommen in der Orbis Arcade. Wähle deinen Automaten, spiele Minispiele und entdecke die Welt von Orbis!
         </p>
     </header>
 
     <main class="arcade-hall">
-        <!-- Automaten-Container -->
         <div class="cabinet-container">
             
             <!-- Spielautomat 1: FruityWay -->
@@ -42,11 +46,12 @@
                 <a href="games/fruityway/index.html" class="coin-btn">INSERT COIN (SPIELEN)</a>
             </div>
 
-            <!-- Spielautomat 2: Coming Soon -->
+            <!-- Spielautomat 2: StarJump -->
             <div class="arcade-cabinet locked">
-                <div class="marquee">GAME 02</div>
+                <div class="marquee">STARJUMP</div>
                 <div class="screen">
-                    <p class="blink">IN VORBEREITUNG</p>
+                    <div class="pixel-art-placeholder">⭐ 🚀 🌌</div>
+                    <p class="blink">BALD VERFÜGBAR</p>
                 </div>
                 <div class="controls">
                     <div class="joystick"></div>
@@ -58,11 +63,12 @@
                 <button class="coin-btn disabled" disabled>OFFLINE</button>
             </div>
 
-            <!-- Spielautomat 3: Coming Soon -->
+            <!-- Spielautomat 3: Heroes Garden -->
             <div class="arcade-cabinet locked">
-                <div class="marquee">GAME 03</div>
+                <div class="marquee">HEROES GARDEN</div>
                 <div class="screen">
-                    <p class="blink">IN VORBEREITUNG</p>
+                    <div class="pixel-art-placeholder">🌱 ⚔️ 🛡️</div>
+                    <p class="blink">BALD VERFÜGBAR</p>
                 </div>
                 <div class="controls">
                     <div class="joystick"></div>
@@ -81,6 +87,7 @@
         <p>&copy; 2026 Orbis Arcade • Press Start to Play</p>
     </footer>
 
+    <!-- Firebase SDKs & Haupt-Skript als Modul einbinden -->
+    <script type="module" src="script.js"></script>
 </body>
 </html>
-
