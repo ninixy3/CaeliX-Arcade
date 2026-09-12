@@ -182,3 +182,9 @@ footer {
     color: #666;
 }
 
+/* Styling für Platzhalter-Pixel-Art in den Screens */
+.pixel-art-placeholder {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    letter-spacing: 4px;
+}
