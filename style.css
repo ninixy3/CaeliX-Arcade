@@ -17,6 +17,47 @@ body {
     justify-content: space-between;
 }
 
+/* Auth-Container oben im Header fixieren */
+.auth-container {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    z-index: 100;
+}
+
+.auth-btn, .logout-btn {
+    background-color: #ff0055;
+    color: #fff;
+    border: 2px solid #ffff00;
+    padding: 8px 12px;
+    font-size: 0.55rem;
+    cursor: pointer;
+    box-shadow: 2px 2px 0px #000;
+}
+
+.auth-btn:hover, .logout-btn:hover {
+    background-color: #00ffff;
+    color: #000;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.55rem;
+    color: #00ffcc;
+}
+
+/* Versteckt Elemente zuverlässig (erzwingt Ausblendung) */
+.hidden,
+div.hidden,
+button.hidden {
+    display: none !important;
+}
+
 /* Titel und Banner */
 .arcade-title {
     font-size: 2.2rem;
@@ -90,6 +131,7 @@ body {
     width: 100%;
     height: 140px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     margin-bottom: 15px;
@@ -99,6 +141,8 @@ body {
 
 .pixel-art-placeholder {
     font-size: 1.8rem;
+    margin-bottom: 8px;
+    letter-spacing: 4px;
 }
 
 /* Bedienfeld (Joystick & Buttons) */
@@ -180,35 +224,4 @@ footer {
     margin-top: 30px;
     font-size: 0.55rem;
     color: #666;
-}
-
-/* Styling für Platzhalter-Pixel-Art in den Screens */
-.pixel-art-placeholder {
-    font-size: 1.8rem;
-    margin-bottom: 8px;
-    letter-spacing: 4px;
-}
-
-/* Auth-Container oben im Header fixieren */
-.auth-container {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    z-index: 100;
-}
-
-/* Versteckt Elemente, wenn sie die Klasse hidden haben */
-.hidden {
-    display: none !important;
-}
-
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.55rem;
-    color: #00ffcc;
 }
