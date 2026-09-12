@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FruityWay - Orbis Arcade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="game-container">
+        <header class="game-header">
+            <a href="../../index.html" class="back-btn">← ARCADE HALL</a>
+            <h1 class="game-title">FRUITYWAY</h1>
+            <div class="score-board">SCORE: <span id="score">0</span></div>
+        </header>
+
+        <!-- Das Spielfeld-Raster -->
+        <div id="grid-board" class="grid-board"></div>
+
+        <!-- Touch / Info Panel -->
+        <div class="status-panel">
+            <p id="game-status">Kombiniere 3 Früchte!</p>
+        </div>
+    </div>
+
+    <script type="module" src="game.js"></script>
+</body>
+</html>
+
