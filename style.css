@@ -197,9 +197,18 @@ footer {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    z-index: 100;
 }
 
-/* Wichtig: Versteckt Elemente sauber */
+/* Versteckt Elemente, wenn sie die Klasse hidden haben */
 .hidden {
     display: none !important;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.55rem;
+    color: #00ffcc;
 }
