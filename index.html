@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbis Arcade</title>
+    <!-- Retro-Pixel-Schriftart von Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Retro CRT-Monitor Effect Overlay -->
+    <div class="crt-overlay"></div>
+
+    <header class="hero">
+        <h1 class="arcade-title">ORBIS ARCADE</h1>
+        <p class="welcome-text">
+            Willkommen in der Orbis Arcade. Entdecke kleine Minispiele und lerne etwas über die Welt.
+        </p>
+    </header>
+
+    <main class="arcade-hall">
+        <!-- Automaten-Container -->
+        <div class="cabinet-container">
+            
+            <!-- Spielautomat 1: FruityWay -->
+            <div class="arcade-cabinet">
+                <div class="marquee">FRUITYWAY</div>
+                <div class="screen">
+                    <div class="pixel-art-placeholder">🍓 🍇 🍎</div>
+                </div>
+                <div class="controls">
+                    <div class="joystick"></div>
+                    <div class="buttons">
+                        <span class="btn red"></span>
+                        <span class="btn blue"></span>
+                    </div>
+                </div>
+                <a href="games/fruityway/index.html" class="coin-btn">INSERT COIN (SPIELEN)</a>
+            </div>
+
+            <!-- Spielautomat 2: Coming Soon -->
+            <div class="arcade-cabinet locked">
+                <div class="marquee">GAME 02</div>
+                <div class="screen">
+                    <p class="blink">IN VORBEREITUNG</p>
+                </div>
+                <div class="controls">
+                    <div class="joystick"></div>
+                    <div class="buttons">
+                        <span class="btn yellow"></span>
+                        <span class="btn green"></span>
+                    </div>
+                </div>
+                <button class="coin-btn disabled" disabled>OFFLINE</button>
+            </div>
+
+            <!-- Spielautomat 3: Coming Soon -->
+            <div class="arcade-cabinet locked">
+                <div class="marquee">GAME 03</div>
+                <div class="screen">
+                    <p class="blink">IN VORBEREITUNG</p>
+                </div>
+                <div class="controls">
+                    <div class="joystick"></div>
+                    <div class="buttons">
+                        <span class="btn red"></span>
+                        <span class="btn yellow"></span>
+                    </div>
+                </div>
+                <button class="coin-btn disabled" disabled>OFFLINE</button>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Orbis Arcade • Press Start to Play</p>
+    </footer>
+
+</body>
+</html>
+
