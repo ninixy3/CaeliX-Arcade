@@ -5,8 +5,8 @@ const statusDisplay = document.getElementById('game-status');
 const width = 6;
 const tiles = [];
 let score = 0;
+let isProcessing = false; // Verhindert Klicks während Steine fallen
 
-// Vorläufige Emoji-Früchte (ersetzen wir später durch deine eigenen Bilder)
 const candyTypes = ['🍓', '🍇', '🍎', '🍋', '🍐'];
 
 let firstTile = null;
@@ -29,6 +29,8 @@ function createBoard() {
 }
 
 function handleTileClick(e) {
+    if (isProcessing) return;
+
     const clickedTile = e.target;
 
     if (!firstTile) {
@@ -51,16 +53,18 @@ function handleTileClick(e) {
 
         if (isNeighbor) {
             swapTiles(firstTile, secondTile);
-            checkMatches();
+            processMatches();
+        } else {
+            firstTile.classList.remove('selected');
+            firstTile = clickedTile;
+            firstTile.classList.add('selected');
+            secondTile = null;
         }
-
-        firstTile.classList.remove('selected');
-        firstTile = null;
-        secondTile = null;
     } else {
         firstTile.classList.remove('selected');
         firstTile = clickedTile;
         firstTile.classList.add('selected');
+        secondTile = null;
     }
 }
 
@@ -70,8 +74,46 @@ function swapTiles(tile1, tile2) {
     tile2.innerText = temp;
 }
 
-function checkMatches() {
-    let matchFound = false;
+async function processMatches() {
+    isProcessing = true;
+    let hasMatches = false;
+
+    // Matches finden & leeren
+    const matchedIndices = findMatches();
+    if (matchedIndices.length > 0) {
+        hasMatches = true;
+        score += matchedIndices.length * 10;
+        scoreDisplay.innerText = score;
+        statusDisplay.innerText = "Combo!";
+
+        // Feld leeren
+        matchedIndices.forEach(index => {
+            tiles[index].innerText = '';
+        });
+
+        if (firstTile) firstTile.classList.remove('selected');
+        firstTile = null;
+        secondTile = null;
+
+        await new Promise(r => setTimeout(r, 250)); // kurze Pause für den Effekt
+
+        // Nachfallen & Neue Früchte von oben generieren
+        await dropTiles();
+        
+        // Kettenreaktion prüfen!
+        await processMatches();
+    } else {
+        if (firstTile) firstTile.classList.remove('selected');
+        firstTile = null;
+        secondTile = null;
+        statusDisplay.innerText = "Finde 3er Kombis!";
+    }
+
+    isProcessing = false;
+}
+
+function findMatches() {
+    const matched = new Set();
 
     // Horizontale Prüfungen
     for (let i = 0; i < 36; i++) {
@@ -79,13 +121,8 @@ function checkMatches() {
         const row = [i, i + 1, i + 2];
         const symbol = tiles[i].innerText;
 
-        if (symbol && row.every(index => tiles[index].innerText === symbol)) {
-            score += 30;
-            scoreDisplay.innerText = score;
-            row.forEach(index => {
-                tiles[index].innerText = candyTypes[Math.floor(Math.random() * candyTypes.length)];
-            });
-            matchFound = true;
+        if (symbol !== '' && row.every(index => tiles[index].innerText === symbol)) {
+            row.forEach(index => matched.add(index));
         }
     }
 
@@ -94,20 +131,33 @@ function checkMatches() {
         const col = [i, i + width, i + (width * 2)];
         const symbol = tiles[i].innerText;
 
-        if (symbol && col.every(index => tiles[index].innerText === symbol)) {
-            score += 30;
-            scoreDisplay.innerText = score;
-            col.forEach(index => {
-                tiles[index].innerText = candyTypes[Math.floor(Math.random() * candyTypes.length)];
-            });
-            matchFound = true;
+        if (symbol !== '' && col.every(index => tiles[index].innerText === symbol)) {
+            col.forEach(index => matched.add(index));
         }
     }
 
-    if (matchFound) {
-        statusDisplay.innerText = "Match! Weiter so!";
+    return Array.from(matched);
+}
+
+async function dropTiles() {
+    for (let i = 35; i >= 0; i--) {
+        if (tiles[i].innerText === '') {
+            // Suche den nächsten Stein darüber
+            let upperIndex = i - width;
+            while (upperIndex >= 0 && tiles[upperIndex].innerText === '') {
+                upperIndex -= width;
+            }
+
+            if (upperIndex >= 0) {
+                // Stein nach unten verschieben
+                tiles[i].innerText = tiles[upperIndex].innerText;
+                tiles[upperIndex].innerText = '';
+            } else {
+                // Keine Steine mehr darüber -> Von oben neu generieren
+                tiles[i].innerText = candyTypes[Math.floor(Math.random() * candyTypes.length)];
+            }
+        }
     }
 }
 
 createBoard();
-
