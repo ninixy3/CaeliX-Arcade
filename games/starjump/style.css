@@ -1,0 +1,125 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #0d0b18;
+    color: #ffffff;
+    font-family: 'Press Start 2P', monospace, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.game-container {
+    text-align: center;
+    background: #16122b;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+    border: 2px solid #00ffff;
+    max-width: 90vw;
+}
+
+.game-header {
+    margin-bottom: 12px;
+}
+
+.back-btn {
+    color: #ffcc00;
+    font-size: 10px;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 8px;
+    transition: color 0.2s ease;
+}
+
+.back-btn:hover {
+    color: #00ffff;
+}
+
+.game-title {
+    color: #00ffff;
+    text-shadow: 2px 2px #ff0080;
+    font-size: 22px;
+    margin-bottom: 8px;
+}
+
+.score-board {
+    font-size: 12px;
+    color: #ffcc00;
+}
+
+/* Canvas & Overlay Wrapper */
+.canvas-wrapper {
+    position: relative;
+    width: 360px;
+    height: 480px;
+    margin: 0 auto;
+    border: 3px solid #ff0080;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(255, 0, 128, 0.3);
+}
+
+#gameCanvas {
+    background: #080514;
+    display: block;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(13, 11, 24, 0.85);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    gap: 15px;
+}
+
+.overlay h2 {
+    color: #00ffff;
+    font-size: 18px;
+    text-shadow: 2px 2px #ff0080;
+}
+
+.overlay p {
+    color: #ffffff;
+    font-size: 9px;
+    line-height: 1.5;
+}
+
+#start-btn {
+    background: #ff0080;
+    color: #ffffff;
+    border: 2px solid #00ffff;
+    font-family: 'Press Start 2P', monospace;
+    padding: 10px 20px;
+    font-size: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#start-btn:hover {
+    background: #00ffff;
+    color: #000;
+    box-shadow: 0 0 10px #00ffff;
+}
+
+.status-panel {
+    margin-top: 12px;
+}
+
+#game-status {
+    font-size: 9px;
+    color: #ffcc00;
+}
