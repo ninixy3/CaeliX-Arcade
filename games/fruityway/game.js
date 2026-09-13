@@ -5,9 +5,24 @@ const statusDisplay = document.getElementById('game-status');
 const width = 6;
 const tiles = [];
 let score = 0;
-let isProcessing = false; // Verhindert Klicks während Steine fallen
+let isProcessing = false;
 
-const candyTypes = ['🍓', '🍇', '🍎', '🍋', '🍐'];
+// Deine 13 Frucht-Bilder
+const candyTypes = [
+    'https://i.postimg.cc/G2s6ZVbM/fr11.png',
+    'https://i.postimg.cc/hj7NH6Ky/fr12.png',
+    'https://i.postimg.cc/QMxs7rvy/fr19.png',
+    'https://i.postimg.cc/RZgyjJD9/fr16.png',
+    'https://i.postimg.cc/g0550Fp7/fr15.png',
+    'https://i.postimg.cc/HWbKThh3/fr13.png',
+    'https://i.postimg.cc/VN3G8q9V/fr9.png',
+    'https://i.postimg.cc/Kjb0KmHq/fr8.png',
+    'https://i.postimg.cc/VvFDn3yN/fr7.png',
+    'https://i.postimg.cc/pd8QKgzP/fr1.png',
+    'https://i.postimg.cc/J7Qq6Vg1/fr4.png',
+    'https://i.postimg.cc/mkVytC9K/fr5.png',
+    'https://i.postimg.cc/dVhjV7Vp/fr3.png'
+];
 
 let firstTile = null;
 let secondTile = null;
@@ -19,8 +34,8 @@ function createBoard() {
         tile.classList.add('tile');
         tile.setAttribute('id', i);
         
-        const randomType = candyTypes[Math.floor(Math.random() * candyTypes.length)];
-        tile.innerText = randomType;
+        const randomImg = candyTypes[Math.floor(Math.random() * candyTypes.length)];
+        tile.innerHTML = `<img src="${randomImg}" alt="fruit">`;
         
         tile.addEventListener('click', handleTileClick);
         gridBoard.appendChild(tile);
@@ -31,7 +46,8 @@ function createBoard() {
 function handleTileClick(e) {
     if (isProcessing) return;
 
-    const clickedTile = e.target;
+    // Klick-Ziel auf die Kachel (tile) festlegen, falls das Bild angeklickt wurde
+    const clickedTile = e.target.tagName === 'IMG' ? e.target.parentElement : e.target;
 
     if (!firstTile) {
         firstTile = clickedTile;
@@ -69,38 +85,32 @@ function handleTileClick(e) {
 }
 
 function swapTiles(tile1, tile2) {
-    const temp = tile1.innerText;
-    tile1.innerText = tile2.innerText;
-    tile2.innerText = temp;
+    const tempHTML = tile1.innerHTML;
+    tile1.innerHTML = tile2.innerHTML;
+    tile2.innerHTML = tempHTML;
 }
 
 async function processMatches() {
     isProcessing = true;
-    let hasMatches = false;
-
-    // Matches finden & leeren
+    
     const matchedIndices = findMatches();
     if (matchedIndices.length > 0) {
-        hasMatches = true;
         score += matchedIndices.length * 10;
         scoreDisplay.innerText = score;
         statusDisplay.innerText = "Combo!";
 
-        // Feld leeren
+        // Matched Felder leeren
         matchedIndices.forEach(index => {
-            tiles[index].innerText = '';
+            tiles[index].innerHTML = '';
         });
 
         if (firstTile) firstTile.classList.remove('selected');
         firstTile = null;
         secondTile = null;
 
-        await new Promise(r => setTimeout(r, 250)); // kurze Pause für den Effekt
+        await new Promise(r => setTimeout(r, 250));
 
-        // Nachfallen & Neue Früchte von oben generieren
         await dropTiles();
-        
-        // Kettenreaktion prüfen!
         await processMatches();
     } else {
         if (firstTile) firstTile.classList.remove('selected');
@@ -112,6 +122,11 @@ async function processMatches() {
     isProcessing = false;
 }
 
+function getTileSrc(tile) {
+    const img = tile.querySelector('img');
+    return img ? img.src : '';
+}
+
 function findMatches() {
     const matched = new Set();
 
@@ -119,9 +134,9 @@ function findMatches() {
     for (let i = 0; i < 36; i++) {
         if (i % width > width - 3) continue;
         const row = [i, i + 1, i + 2];
-        const symbol = tiles[i].innerText;
+        const src = getTileSrc(tiles[i]);
 
-        if (symbol !== '' && row.every(index => tiles[index].innerText === symbol)) {
+        if (src !== '' && row.every(index => getTileSrc(tiles[index]) === src)) {
             row.forEach(index => matched.add(index));
         }
     }
@@ -129,9 +144,9 @@ function findMatches() {
     // Vertikale Prüfungen
     for (let i = 0; i < 24; i++) {
         const col = [i, i + width, i + (width * 2)];
-        const symbol = tiles[i].innerText;
+        const src = getTileSrc(tiles[i]);
 
-        if (symbol !== '' && col.every(index => tiles[index].innerText === symbol)) {
+        if (src !== '' && col.every(index => getTileSrc(tiles[index]) === src)) {
             col.forEach(index => matched.add(index));
         }
     }
@@ -141,20 +156,18 @@ function findMatches() {
 
 async function dropTiles() {
     for (let i = 35; i >= 0; i--) {
-        if (tiles[i].innerText === '') {
-            // Suche den nächsten Stein darüber
+        if (tiles[i].innerHTML === '') {
             let upperIndex = i - width;
-            while (upperIndex >= 0 && tiles[upperIndex].innerText === '') {
+            while (upperIndex >= 0 && tiles[upperIndex].innerHTML === '') {
                 upperIndex -= width;
             }
 
             if (upperIndex >= 0) {
-                // Stein nach unten verschieben
-                tiles[i].innerText = tiles[upperIndex].innerText;
-                tiles[upperIndex].innerText = '';
+                tiles[i].innerHTML = tiles[upperIndex].innerHTML;
+                tiles[upperIndex].innerHTML = '';
             } else {
-                // Keine Steine mehr darüber -> Von oben neu generieren
-                tiles[i].innerText = candyTypes[Math.floor(Math.random() * candyTypes.length)];
+                const randomImg = candyTypes[Math.floor(Math.random() * candyTypes.length)];
+                tiles[i].innerHTML = `<img src="${randomImg}" alt="fruit">`;
             }
         }
     }
