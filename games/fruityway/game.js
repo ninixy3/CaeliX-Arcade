@@ -16,6 +16,10 @@ let bossMaxHp = 1000;
 let bossHp = 1000;
 let sleepTurns = 0;
 
+// Item Status
+let doubleScoreMatches = 0;
+let isBerryActive = false;
+
 const BOSS_SPRITES = {
     calm: 'https://i.postimg.cc/Jz4cyXHL/voidvruhig.png',
     angry: 'https://i.postimg.cc/tJnM6rqY/voidvrmad.png',
@@ -59,12 +63,29 @@ function createBoard() {
         tiles.push(tile);
     }
     updateBossUI();
+    setupShopButtons();
 }
 
 function handleTileClick(e) {
     if (isProcessing) return;
 
     const clickedTile = e.target.tagName === 'IMG' ? e.target.parentElement : e.target;
+
+    // Planetenbeere-Aktion
+    if (isBerryActive) {
+        const targetSrc = getTileSrc(clickedTile);
+        if (targetSrc) {
+            isBerryActive = false;
+            tiles.forEach(t => {
+                if (getTileSrc(t) === targetSrc && t.dataset.petrified === "false") {
+                    t.innerHTML = '';
+                }
+            });
+            if (statusDisplay) statusDisplay.innerText = "Planetenbeere! Alle gewählten Früchte entfernt.";
+            dropTiles().then(() => processMatches(false));
+        }
+        return;
+    }
 
     // Versteinertes Feld sperren
     if (clickedTile.dataset.petrified === "true") {
@@ -133,8 +154,16 @@ async function processMatches(isPlayerMove = false) {
     
     const matchedIndices = findMatches();
     if (matchedIndices.length > 0) {
+        let pointsGained = matchedIndices.length * 10;
+
+        // Kosmos Kokosnuss Verdoppler
+        if (doubleScoreMatches > 0) {
+            pointsGained *= 2;
+            doubleScoreMatches--;
+        }
+
+        score += pointsGained;
         const damage = matchedIndices.length * 15;
-        score += matchedIndices.length * 10;
         bossHp = Math.max(0, bossHp - damage);
 
         if (scoreDisplay) scoreDisplay.innerText = score;
@@ -166,7 +195,9 @@ async function processMatches(isPlayerMove = false) {
         if (isPlayerMove) {
             handleBossAction();
         }
-        if (statusDisplay && bossHp > 0) statusDisplay.innerText = "Finde 3er Kombis!";
+        if (statusDisplay && bossHp > 0 && !isBerryActive) {
+            statusDisplay.innerText = "Finde 3er Kombis!";
+        }
     }
 
     isProcessing = false;
@@ -196,6 +227,7 @@ function handleBossAction() {
     if (sleepTurns > 0) {
         sleepTurns--;
         updateBossUI();
+        if (statusDisplay) statusDisplay.innerText = `Voidvorka schläft noch (${sleepTurns} Züge)`;
         return;
     }
 
@@ -296,6 +328,72 @@ async function dropTiles() {
             if (upperIndex >= 0) updateTileState(tiles[upperIndex]);
         }
     }
+}
+
+// Kosmischer Shop
+function buyItem(type) {
+    if (isProcessing || bossHp <= 0) return;
+
+    if (type === 'lotus') {
+        if (score >= 300) {
+            score -= 300;
+            scoreDisplay.innerText = score;
+            sleepTurns = 3;
+            updateBossUI();
+            if (statusDisplay) statusDisplay.innerText = "Galaxie Lotus genutzt! Voidvorka schläft 3 Züge.";
+        } else {
+            if (statusDisplay) statusDisplay.innerText = "Nicht genug Punkte für Galaxie Lotus!";
+        }
+    } else if (type === 'shroom') {
+        if (score >= 150) {
+            score -= 150;
+            scoreDisplay.innerText = score;
+
+            const currentImages = tiles
+                .filter(t => t.dataset.petrified === "false" && t.querySelector('img'))
+                .map(t => t.querySelector('img').src);
+
+            currentImages.sort(() => Math.random() - 0.5);
+
+            let imgIdx = 0;
+            tiles.forEach(t => {
+                if (t.dataset.petrified === "false") {
+                    t.innerHTML = `<img src="${currentImages[imgIdx]}" alt="fruit">`;
+                    imgIdx++;
+                }
+            });
+
+            if (statusDisplay) statusDisplay.innerText = "Saturn Pilz genutzt! Feld neu gemischt.";
+            processMatches(false);
+        } else {
+            if (statusDisplay) statusDisplay.innerText = "Nicht genug Punkte für Saturn Pilz!";
+        }
+    } else if (type === 'berry') {
+        if (score >= 250) {
+            score -= 250;
+            scoreDisplay.innerText = score;
+            isBerryActive = true;
+            if (statusDisplay) statusDisplay.innerText = "Planetenbeere aktiv! Klicke eine Frucht an.";
+        } else {
+            if (statusDisplay) statusDisplay.innerText = "Nicht genug Punkte für Planetenbeere!";
+        }
+    } else if (type === 'coconut') {
+        if (score >= 200) {
+            score -= 200;
+            scoreDisplay.innerText = score;
+            doubleScoreMatches = 3;
+            if (statusDisplay) statusDisplay.innerText = "Kosmos Kokos genutzt! 2x Punkte für 3 Matches!";
+        } else {
+            if (statusDisplay) statusDisplay.innerText = "Nicht genug Punkte für Kosmos Kokos!";
+        }
+    }
+}
+
+function setupShopButtons() {
+    document.getElementById('btn-lotus')?.addEventListener('click', () => buyItem('lotus'));
+    document.getElementById('btn-shroom')?.addEventListener('click', () => buyItem('shroom'));
+    document.getElementById('btn-berry')?.addEventListener('click', () => buyItem('berry'));
+    document.getElementById('btn-coconut')?.addEventListener('click', () => buyItem('coconut'));
 }
 
 createBoard();
